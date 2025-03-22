@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import Recommender from './components/recommender';
 
 ChartJS.register(
   CategoryScale,
@@ -22,16 +23,17 @@ ChartJS.register(
   Legend
 );
 
-const socket = io('http://localhost:3000');
+const socket = io('http://localhost:5000');
 
 export default function App() {
   const [ecgData, setEcgData] = useState([]);
 
   useEffect(() => {
     socket.on('ecg_data', (data) => {
+      console.log("data", data);
       setEcgData((prevData) => {
         const newData = [...prevData, parseInt(data)];
-        return newData.slice(-100); // Mantener solo los últimos 100 puntos
+        return newData.slice(-100);
       });
     });
 
@@ -83,10 +85,15 @@ export default function App() {
   };
 
   return (
-    <div className="App">
-      <h1>ELECTROCARDIOGRAMA</h1>
-      <div style={{ width: '80%', margin: '0 auto' }}>
-        <Line data={chartData} options={options} />
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6 text-center">Telemedicina</h1>
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="w-full md:w-2/3">
+          <Line data={chartData} options={options} />
+        </div>
+        <div className="w-full md:w-1/3">
+          <Recommender onData={() => ecgData} />
+        </div>
       </div>
     </div>
   );
