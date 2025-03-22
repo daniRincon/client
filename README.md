@@ -1,5 +1,66 @@
 # Getting Started with Create React App
 
+OPENAI_API_KEY=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
+
+codigo arduino
+const int ECG_PIN = A0;
+
+const int BUFFER_SIZE = 10;
+int buffer[BUFFER_SIZE];
+int bufferIndex = 0;
+
+const int MIN_VALID = 50;
+const int MAX_VALID = 250;
+int THRESHOLD = 520;
+
+unsigned long lastBeat = 0;
+int bpm = 0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ECG_PIN, INPUT);
+
+  for (int i = 0; i < BUFFER_SIZE; i++) buffer[i] = 0;
+}
+
+void loop() {
+  int rawValue = analogRead(ECG_PIN);
+
+  // Media móvil
+  buffer[bufferIndex] = rawValue;
+  bufferIndex = (bufferIndex + 1) % BUFFER_SIZE;
+
+  int sum = 0;
+  for (int i = 0; i < BUFFER_SIZE; i++) sum += buffer[i];
+  int filteredValue = sum / BUFFER_SIZE;
+
+  // Umbral adaptativo
+  THRESHOLD = filteredValue + 20;
+
+  // Mapear y limitar
+  int mappedValue = map(filteredValue, 400, 600, MIN_VALID, MAX_VALID);
+  mappedValue = constrain(mappedValue, MIN_VALID, MAX_VALID);
+
+  // Enviar solo el valor mapeado
+  Serial.print(mappedValue);
+
+  // Detección de latido
+  if (filteredValue > THRESHOLD && millis() - lastBeat > 600) { // ahora espera mínimo 600ms
+    unsigned long currentTime = millis();
+    bpm = 60000 / (currentTime - lastBeat);
+    lastBeat = currentTime;
+
+    if (bpm > 40 && bpm < 180) {
+      Serial.print(",");
+      Serial.print(bpm); // Solo los números, separados por coma
+    }
+  }
+
+  Serial.println(); // Cada línea será como: 130 ó 145,72
+  delay(5);
+}
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
