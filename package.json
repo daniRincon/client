@@ -6,11 +6,14 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.8.4",
     "chart.js": "^4.4.6",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
+    "serialport": "^13.0.0",
+    "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"
   },
@@ -43,5 +46,10 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14"
-  }
+  },
+  "description": "OPENAI_API_KEY=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",
+  "main": "postcss.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
